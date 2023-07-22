@@ -234,13 +234,13 @@ def filter():
             if task.online == False:
                 d = distance_func(task.location, session['address'])
 
-                print(task.title)
+
 
 
 
 
                 if d != "N/A":
-                    print(int(d) <= int(distance))
+
                     if int(d) <= int(distance):
 
                         distances.append(d)
@@ -251,6 +251,15 @@ def filter():
                     tasks.remove(task)
 
 
+
+            else:
+                distances.append("N/A")
+
+
+    else:
+        for task in tasks:
+            if len(task.location) > 0:
+                distances.append(distance_func(task.location, session['address']))
 
             else:
                 distances.append("N/A")
