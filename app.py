@@ -22,7 +22,6 @@ def distance_func(string,string2):
 
         o1 = str(location.longitude) +',' + str(location.latitude)
         o2 = str(location2.longitude) + ',' + str(location2.latitude)
-
     except:
         return "N/A"
 
@@ -41,13 +40,13 @@ def distance_func(string,string2):
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SECRET_KEY'] = 'your-secret-key'
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_SERVER'] = 'smtp.office365.com'
 app.config['MAIL_PORT'] = 587
-app.config['MAIL_USERNAME'] = 'lendahandd1@gmail.com'
-app.config['MAIL_PASSWORD'] = 'eqnbpesygmbovgjc'
+app.config['MAIL_USERNAME'] = 'lendahand_ika@outlook.com'
+app.config['MAIL_PASSWORD'] = 'Q#f3^eCGshT-9Nb'
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_DEFAULT_SENDER'] = 'lendahandd1@gmail.com'
+app.config['MAIL_DEFAULT_SENDER'] = 'lendahand_ika@outlook.com'
 
 db = SQLAlchemy(app)
 mail = Mail(app)
@@ -78,6 +77,7 @@ class Task(db.Model):
 
 
 
+
 with app.app_context():
         db.create_all()
 
@@ -102,6 +102,10 @@ def login():
             session['user_email'] = user.email  # Store the user's email in the session
             session['name'] = user.name
             session['address'] = user.address
+
+            tasks = Task.query.all()
+
+
 
 
 
@@ -142,8 +146,12 @@ def filter():
     mintime = results.get('min-time')
     maxtime = results.get('max-time')
 
+
+
     if len(age) == 0:
         age = 0
+
+
 
     if len(maxtime) == 0:
         maxtime = 100000000
@@ -216,31 +224,36 @@ def filter():
         tasks = tasks.all()
 
 
+
+
     distances = []
     distance= results.get('distance')
-    if location == 0:
+    if (location == 0) and (len(distance) > 0):
 
-        for task in tasks:
+        for task in tasks[:]:
             if task.online == False:
-                if len(task.location) == 0:
-                    distances.append("N/A")
-                else:
-                    d = distance_func(task.location, session['address'])
-                    if d != "N/A":
-                        if len(distance) == 0:
-                            distance = 150
-                        if d > int(distance):
+                d = distance_func(task.location, session['address'])
 
-                            tasks.remove(task)
-                        else:
-                            distances.append(d)
-                    else:
+                print(task.title)
+
+
+
+
+                if d != "N/A":
+                    print(int(d) <= int(distance))
+                    if int(d) <= int(distance):
+
                         distances.append(d)
+                    else:
+                        tasks.remove(task)
+                else:
+
+                    tasks.remove(task)
+
+
 
             else:
-                distances.append(0)
-
-
+                distances.append("N/A")
 
 
     user_email = session.get('user_email')
@@ -258,6 +271,11 @@ def success():
     tasks = Task.query.filter(Task.date >= date.today()).all()
 
 
+
+
+
+
+
     user_email = session.get('user_email')
 
     if not user_email:
@@ -267,19 +285,17 @@ def success():
 
     distances = []
 
-    temp = Task.query.all()
 
-    for row in temp:
+
+    for row in tasks:
+
+        d = "N/A"
         if row.online == False:
-            if len(row.location) == 0:
-                distances.append("N/A")
-            else:
-                if row.location == None:
-                    distances.append("N/A")
-                else:
-                    distances.append(distance_func(row.location, user.address))
-        else:
-            distances.append(0)
+
+            if (len(row.location) != 0):
+                d = distance_func(row.location, user.address)
+
+        distances.append(d)
 
     return render_template('success.html', name=user.name, email=user.email, tasks=tasks, skills=skills_array,causes=causes_array,distances=distances)
 
@@ -376,6 +392,7 @@ def need_a_hand():
         additional_info = request.form['additional-info']
         time_required = request.form['time-required']
         min_age = request.form.get('min-age')
+
         if len(min_age) == 0:
             min_age = 0
 
