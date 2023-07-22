@@ -1,4 +1,4 @@
-[Lend A Hand - Micro-Volunteering Platform] (https://lendahand.pythonanywhere.com/)
+# [Lend A Hand - Micro-Volunteering Platform](https://lendahand.pythonanywhere.com/)
 
 Lend A Hand is an easy-to-use micro-volunteering platform developed for the TechXelerate Hackathon. Our project aims to connect volunteers with meaningful opportunities to contribute to various causes and organizations.
 
