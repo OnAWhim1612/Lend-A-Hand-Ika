@@ -18,8 +18,13 @@ def distance_func(string,string2):
     location = locator.geocode(string)
     location2 = locator.geocode(string2)
 
-    o1 = str(location.longitude) +',' + str(location.latitude)
-    o2 = str(location2.longitude) + ',' + str(location2.latitude)
+    try:
+
+        o1 = str(location.longitude) +',' + str(location.latitude)
+        o2 = str(location2.longitude) + ',' + str(location2.latitude)
+
+    except:
+        return "N/A"
 
     x = o1 + ';' + o2
     url = 'http://router.project-osrm.org/route/v1/driving/'
@@ -36,13 +41,13 @@ def distance_func(string,string2):
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SECRET_KEY'] = 'your-secret-key'
-app.config['MAIL_SERVER'] = 'smtp.office365.com'
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
-app.config['MAIL_USERNAME'] = 'lendahand_ika@outlook.com'
-app.config['MAIL_PASSWORD'] = 'Q#f3^eCGshT-9Nb'
+app.config['MAIL_USERNAME'] = 'lendahandd1@gmail.com'
+app.config['MAIL_PASSWORD'] = 'eqnbpesygmbovgjc'
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_DEFAULT_SENDER'] = 'lendahand_ika@outlook.com'
+app.config['MAIL_DEFAULT_SENDER'] = 'lendahandd1@gmail.com'
 
 db = SQLAlchemy(app)
 mail = Mail(app)
@@ -137,12 +142,8 @@ def filter():
     mintime = results.get('min-time')
     maxtime = results.get('max-time')
 
-
-
     if len(age) == 0:
         age = 0
-
-
 
     if len(maxtime) == 0:
         maxtime = 100000000
@@ -225,11 +226,14 @@ def filter():
                     distances.append("N/A")
                 else:
                     d = distance_func(task.location, session['address'])
-                    if len(distance) == 0:
-                        distance = 150
-                    if d > int(distance):
+                    if d != "N/A":
+                        if len(distance) == 0:
+                            distance = 150
+                        if d > int(distance):
 
-                        tasks.remove(task)
+                            tasks.remove(task)
+                        else:
+                            distances.append(d)
                     else:
                         distances.append(d)
 
@@ -267,10 +271,13 @@ def success():
 
     for row in temp:
         if row.online == False:
-            if len(row.location)== 0:
+            if len(row.location) == 0:
                 distances.append("N/A")
             else:
-                distances.append(distance_func(row.location, user.address))
+                if row.location == None:
+                    distances.append("N/A")
+                else:
+                    distances.append(distance_func(row.location, user.address))
         else:
             distances.append(0)
 
@@ -369,7 +376,6 @@ def need_a_hand():
         additional_info = request.form['additional-info']
         time_required = request.form['time-required']
         min_age = request.form.get('min-age')
-
         if len(min_age) == 0:
             min_age = 0
 
