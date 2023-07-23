@@ -40,13 +40,13 @@ def distance_func(string,string2):
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SECRET_KEY'] = 'your-secret-key'
-app.config['MAIL_SERVER'] = 'smtp.office365.com'
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
-app.config['MAIL_USERNAME'] = 'lendahand_ika@outlook.com'
-app.config['MAIL_PASSWORD'] = 'Q#f3^eCGshT-9Nb'
+app.config['MAIL_USERNAME'] = 'lendahandd1@gmail.com'
+app.config['MAIL_PASSWORD'] = 'nxmimnxomkzroccv'
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_DEFAULT_SENDER'] = 'lendahand_ika@outlook.com'
+app.config['MAIL_DEFAULT_SENDER'] = 'lendahandd1@gmail.com'
 
 db = SQLAlchemy(app)
 mail = Mail(app)
