@@ -149,7 +149,7 @@ def filter():
 
 
     if len(age) == 0:
-        age = 0
+        age = 1000
 
 
 
@@ -185,10 +185,10 @@ def filter():
     if online:
 
         tasks = Task.query.filter(Task.date >= date.today(),
-                              Task.time_required >= mintime, Task.min_age >= age, Task.time_required <= maxtime, ((func.length(Task.location) > location) | (Task.online == True)))
+                              Task.time_required >= mintime, Task.min_age <= age, Task.time_required <= maxtime, ((func.length(Task.location) > location) | (Task.online == True)))
     elif location == 0:
         tasks = Task.query.filter(Task.date >= date.today(),
-                              Task.time_required >= mintime, Task.min_age >= age, Task.time_required <= maxtime, Task.online == False)
+                              Task.time_required >= mintime, Task.min_age <= age, Task.time_required <= maxtime, Task.online == False)
 
     submitted_causes = request.form.getlist('causes')
 
